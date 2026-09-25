@@ -1,164 +1,60 @@
-// @ts-ignore
-import React from 'react';
-import styled from "styled-components";
-import {SectionTitle} from "@/components/SectionTitle.tsx";
-import {IconWrapper} from "@/components/IconWrapper.tsx";
-import {Icon} from "@/components/icon/Icon.tsx";
-import {Container} from "@/components/Container.tsx";
-import {FlexContainer} from "@/components/FlexContainer.tsx";
-import {themes} from "@/styles/Themes.styled.tsx";
-import {font} from "@/styles/Common.tsx";
+import styled from 'styled-components';
+import { Container } from '@/components/Container';
+import { SectionTitle } from '@/components/SectionTitle';
+import { primarySkills, skillGroups, type Skill } from '@/data/portfolio';
+import { localized, useLanguage } from '@/i18n';
 
-
-const techs = [
-    {title: "HTML", percent: "80%"},
-    {title: "CSS,SASS", percent: "80%"},
-    {title: "React", percent: "70%"},
-    {title: "Styled components", percent: "60%"},
-]
 export const Technologies = () => {
-    return (
-
-        <StyledTechnologies id={"technologies"}>
-            <Container>
-
-                <SectionTitle fontsize={"46px"} fontWeight={"600"}
-                              margin={"100px 0 70px"}>Technologies</SectionTitle>
-
-                <FlexContainer flexDirection="column" justify={"flex-start"} alignContent={"center"}>
-
-                    <ProgressWrapper>
-                        {techs.map((item, index) => (
-                            <Progress title={item.title} widthProgress={item.percent} key={index}/>
-                        ))}
-                    </ProgressWrapper>
-
-                    <TitleWrapper>
-                        <SectionTitle fontsize={"44px"} fontWeight={"600"} margin={"0 0 70px"}>Additional technologies and
-                            skills</SectionTitle>
-                    </TitleWrapper>
-
-                    <IconWrapper gap={"50px"}>
-                        <Icon iconId={"gitSkills"} width={"100px"} height={"100px"} viewBox={"0 0 100 100"}/>
-                        <Icon iconId={"githubSkills"} width={"100px"} height={"100px"} viewBox={"0 0 100 100"}/>
-                        <Icon iconId={"figmaSkills"} width={"100px"} height={"100px"} viewBox={"0 0 100 100"}/>
-                    </IconWrapper>
-
-                    <IconWrapperAdaptive>
-                        <Icon iconId={"gitSkills"} width={"60px"} height={"60px"} viewBox={"0 0 100 100"}/>
-                        <Icon iconId={"githubSkills"} width={"60px"} height={"60px"} viewBox={"0 0 100 100"}/>
-                        <Icon iconId={"figmaSkills"} width={"60px"} height={"60px"} viewBox={"0 0 100 100"}/>
-                    </IconWrapperAdaptive>
-
-                </FlexContainer>
-
-            </Container>
-
-        </StyledTechnologies>
-
-    );
+  const { t } = useLanguage();
+  const groupLabels: Record<string, string> = {
+    Frontend: t.skills.groups.frontend,
+    'Forms & validation': t.skills.groups.forms,
+    'API & authentication': t.skills.groups.api,
+    'Testing & tooling': t.skills.groups.testing,
+  };
+  return <section id="technologies" aria-labelledby="skills-title">
+  <Container>
+    <p className="eyebrow">{t.skills.eyebrow}</p>
+    <SectionTitle id="skills-title">{t.skills.title}</SectionTitle>
+    <p className="section-intro">{t.skills.intro}</p>
+    <SkillsGrid>{primarySkills.map(skill => <SkillItem key={skill.name} skill={skill} />)}</SkillsGrid>
+    <GroupGrid>{skillGroups.map(group => <div key={group.name}><h3>{groupLabels[group.name]}</h3><ul className="badges">{group.items.map(item => <li key={item}>{item}</li>)}</ul></div>)}</GroupGrid>
+  </Container>
+</section>;
 };
 
-const StyledTechnologies = styled.section`
-
-    display: flex;
-    padding: 0 0 170px;
-    
-    ${SectionTitle} {
-        ${font({weight: 600, Fmax: 46, Fmin: 32})};
-    }
-    
-    @media ${themes.media.tablet} {
-        padding: 0;
-        ${IconWrapper} {
-            margin: 80px 0 110px;
-        }
-    }
-    @media ${themes.media.mobile} {
-        ${IconWrapper} {
-           display: none;
-        }
-    }
-`
-
-const ProgressWrapper = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    margin: 0 auto 120px;
-    padding: 0 120px;
-    
-    @media ${themes.media.tablet} {
-        padding: 60px 0 85px;
-        margin: 0;
-    }
-    @media ${themes.media.mobile} {
-        padding: 30px 0 85px;
-        margin: 0;
-    }
-
-`
-
-const ProgressBarContainer = styled.div`
-    width: 100%;
-    height: 18px;
-    background-color: #162950;
-    border-radius: 83px;
-    overflow: hidden;
-
-`
-type ProgressBarType = {
-    widthProgress?: string
+function SkillItem({ skill }: { skill: Skill }) {
+  const { t } = useLanguage();
+  const level = skill.level;
+  return <SkillRow>
+    <div className="skill-label"><h3>{skill.name}</h3>{level !== null && <span>{level}%</span>}</div>
+    {level !== null && <progress aria-label={localized(t.skills.proficiency, { skill: skill.name })} max={100} value={level} />}
+  </SkillRow>;
 }
-const ProgressBar = styled.div<ProgressBarType>`
-
-    height: 100%;
-    border-radius: 83px;
-    background: linear-gradient(
-            to right,
-            #13ADC7 0%,
-            #6978D1 67%,
-            #945DD6 100%
-    );
-
-    width: ${props => props.widthProgress || "30%"}
-
-`
-type ProgressType = {
-    widthProgress?: string
-    title: string
-}
-export const Progress = ({widthProgress, title}: ProgressType) => {
-    return (
-        <StyledProgress>
-            <SectionTitle fontsize={"24px"} fontWeight={"600"}>{title}</SectionTitle>
-            <ProgressBarContainer>
-                <ProgressBar widthProgress={widthProgress}/>
-            </ProgressBarContainer>
-        </StyledProgress>
-
-    )
-}
-
-const StyledProgress = styled.div`
-    min-height: 54px;
-    
-    ${SectionTitle} {
-        ${font({weight: 600, Fmax: 24, Fmin: 22})};
-    }
-`
-
-const TitleWrapper = styled(SectionTitle)`
-   text-align: center;
-`
-
-const IconWrapperAdaptive = styled.div`
-    display: none;
-    gap: 30px;
-    
-    @media ${themes.media.mobile} {
-        display: flex;
-        margin: 45px 0 100px;
-    }
-`
+const SkillsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 36px;
+  margin-bottom: 48px;
+  @media (max-width: 560px) { grid-template-columns: 1fr; }
+`;
+const SkillRow = styled.div`
+  min-width: 0;
+  padding: 14px 0 14px 18px;
+  border-left: 3px solid #8874cf;
+  &:nth-child(-n + 2) { border-color: #53c4d7; }
+  h3 { font-size: 18px; font-weight: 500; }
+  .skill-label { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .skill-label span { flex-shrink: 0; font-size: 14px; }
+  progress { appearance: none; display: block; width: 100%; height: 12px; margin-top: 12px; border: 0; border-radius: 12px; overflow: hidden; background: #162950; }
+  progress::-webkit-progress-bar { background: #162950; border-radius: 12px; }
+  progress::-webkit-progress-value { background: linear-gradient(90deg, #13adc7, #945dd6); border-radius: 12px; }
+  progress::-moz-progress-bar { background: linear-gradient(90deg, #13adc7, #945dd6); border-radius: 12px; }
+`;
+const GroupGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  h3 { font-size: 16px; font-weight: 600; margin-bottom: 14px; }
+  @media (max-width: 560px) { grid-template-columns: 1fr; }
+`;

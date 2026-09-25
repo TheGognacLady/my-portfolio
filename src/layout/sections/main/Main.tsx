@@ -1,53 +1,21 @@
-// @ts-ignore
-import React, {useState} from 'react';
-import photo from "../../../images/Jane.jpg"
-import {Button} from "@/components/Button.tsx";
-import {Container} from "@/components/Container.tsx";
-import {FlexContainer} from "@/components/FlexContainer.tsx";
-import image from "../../../images/drawing.png"
-import Typewriter from 'typewriter-effect';
-import {S} from "./Main_styles.ts"
-import Tilt from 'react-parallax-tilt';
-import {ButtonText} from "@/components/ButtonText.tsx";
+import photo from '@/images/Jane.jpg';
+import { Container } from '@/components/Container';
+import { S } from './Main_styles';
+import { useLanguage } from '@/i18n';
 
 export const Main = () => {
-    const [scale, setScale] = useState(1.15);
-    return (
-        <S.StyledMain id={"aboutme"}>
-            <Container>
-                <FlexContainer justify="space-between" align="center" >
-                    <S.InfoContainer>
-                        <S.MainTitle>
-                            <p>Web developer</p>
-                            <Typewriter
-                                options={{
-                                    strings: ['Web Developer', 'Web Designer'],
-                                    autoStart: true,
-                                    loop: true,
-                                }}
-                            />
-                        </S.MainTitle>
-                        <S.StyledParagraph>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                            incididunt ut labore et dolore magna aliqua. </S.StyledParagraph>
-                        <Button width="240px">
-                            <ButtonText text={"Let’s Begin"}/>
-                        </Button>
-                    </S.InfoContainer>
-
-
-                    <Tilt scale={scale} transitionSpeed={2500}>
-                        <div className="background-stripes tilt-scale">
-                        </div>
-                        <S.Photo src={photo} alt="photo"/>
-                    </Tilt>
-
-                    {/*<S.Photo src={photo} alt="photo"/>*/}
-                    <S.BackgroundImage src={image}/>
-                </FlexContainer>
-            </Container>
-        </S.StyledMain>
-
-
-    );
+  const { t } = useLanguage();
+  return <S.StyledMain id="aboutme" aria-labelledby="hero-title">
+  <Container>
+    <S.Content>
+      <div>
+        <p className="eyebrow">Frontend Developer / React Developer</p>
+        <h1 id="hero-title">{t.hero.name}<span className="hero-dot">.</span></h1>
+        <S.Intro>{t.hero.intro}</S.Intro>
+        <div className="actions"><a className="button primary" href="#projects" aria-label={t.hero.viewProjectsLabel}>{t.hero.viewProjects} <span aria-hidden="true">↗</span></a><a className="button secondary" href="#contact">{t.hero.getInTouch}</a></div>
+      </div>
+      <S.Photo src={photo} alt="Jane Nadtoka" width="380" height="450" fetchPriority="high" />
+    </S.Content>
+  </Container>
+</S.StyledMain>;
 };
-

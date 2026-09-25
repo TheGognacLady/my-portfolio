@@ -1,22 +1,9 @@
-import styled from "styled-components";
-import { themes} from "../styles/Themes.styled.tsx";
+import styled from 'styled-components';
 
-type SectionTitleSize = {
-    fontsize?: string
-    fontWeight?: string
-    margin?: string
-    padding?: string
-}
-export const SectionTitle = styled.h2<SectionTitleSize>`
-
-    font-family: Poppins, sans-serif;
-    font-size: ${props=> props.fontsize || "30px"} ;
-    font-weight: ${props=> props.fontWeight || "normal"};
-    color: ${themes.colors.font};
-    margin:${props=> props.margin || "0"};
-    padding: ${props=> props.padding || "0"};
-    
-    @media ${themes.media.tablet} {
-        margin: 0;
-    }
-`
+export const SectionTitle = styled.h2`
+  font-size: clamp(1.8rem, 3.5vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  letter-spacing: -0.035em;
+`;
